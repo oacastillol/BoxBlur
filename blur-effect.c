@@ -3,7 +3,6 @@
 #include <iostream>
 typedef cv::Point3_<uint8_t> Pixel;
 using namespace std;
-
 using namespace cv;
 
 string type2str(int type) {
@@ -28,85 +27,73 @@ string type2str(int type) {
 
   return r;
 }
+Pixel averangePixel(Pixel* p1,Pixel* p2){
+  //cout << " P1 x " << unsigned(p1->x) <<" y " << unsigned(p1->y) <<" z " << unsigned(p1->z) << endl;
+  //cout << " P2 x " << unsigned(p2->x) <<" y " << unsigned(p2->y) <<" z " << unsigned(p2->z) << endl;
+    return Pixel((p1->x+p2->x)/2,(p1->x+p2->x)/2,(p1->x+p2->x)/2);
+}
+Pixel sumKernel(Mat* m){
+  if (m->rows != m->cols || m->rows % 2 != 1 ){
+    perror ("El kernel debe ser un número impar");
+    exit(-1);
+  }
+  int  center = m->cols /2;
+  Pixel suma ;
+  for (int r=0;r < m->rows; ++r ){
+    for(int c=0;c < m->cols; ++c){
+      if(r == 0 && c == 0)
+	suma = *m->ptr<Pixel>(r,c);
+      if(r == center && c == center)
+	continue;
+      suma = averangePixel(&suma,m->ptr<Pixel>(r,c));
+      //cout<<" r "<<r<<" c "<<c<<endl;
+    }
+  }
+  return suma;
+}
 int main(int argc, char *argv[])
 {
+  int kernel = 3;
+  int mitad = kernel / 2;
   if ( argc != 2){
-    printf("Se debe ejecutar como ./blur-effect <imageName.ext>\n");
+    cout<<"Se debe ejecutar como ./blur-effect <imageName.ext>\n";
     return -1;
   }
   char* imageName = argv[1];  
-  Mat imagen = imread(imageName);
-  Mat copia = imagen.clone();
-  if (imagen.empty()){
-    printf("No se pudo abrir la imagen %s\n",imageName);
+  Mat original = imread(imageName);
+  Mat copia = original.clone();
+  if (original.empty()){
+    cout<<"No se pudo abrir la imagen "<<imageName<<endl;
     return -1;
   }else{
-    cout << "Type = " << endl << " " << type2str(imagen.type()) << endl << endl;
-    cout << "cols = " << endl << " " << imagen.cols << endl << endl;
-    cout << "rows = " << endl << " " << imagen.rows << endl << endl;
-    cout << " dims = " << endl << " " << imagen.dims << endl << endl;
-    cout << "size = " << endl << " " << imagen.size << endl << endl;
-    cout << "step = " << endl << " " << imagen.step << endl << endl;
-    namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
-    imshow(imageName,imagen);
-    cvWaitKey(0);
-    for (int r = 0; r < imagen.rows; ++r) {
-      Pixel* ptrOriginal = imagen.ptr<Pixel>(r, 0);
-      Pixel* ptrOriginalRowUp;
-      ptrOriginalRowUp = imagen.ptr<Pixel>(r, 0);
-      if(r-1>=0)
-	ptrOriginalRowUp = imagen.ptr<Pixel>(r-1, 0);
-      Pixel* ptrOriginalRowDown;
-      ptrOriginalRowDown = imagen.ptr<Pixel>(r, 0);
-      if(r+1<imagen.rows)
-	ptrOriginalRowDown = imagen.ptr<Pixel>(r+1, 0);
-      Pixel* ptr = copia.ptr<Pixel>(r, 0);
-      const Pixel* ptr_end = ptr + copia.cols;
-      Pixel* ptrOriginalRDLeft;
-      Pixel* ptrOriginalRDRigth;
-      Pixel* ptrOriginalRULeft;
-      Pixel* ptrOriginalRURigth;
-      Pixel* ptrOriginalLeft;
-      Pixel* ptrOriginalRigth;
-      int xvalue;
-      int yvalue;
-      int zvalue;
-      for (int  i = 0; ptr != ptr_end;++i, ++ptr,++ptrOriginal, ++ptrOriginalRowUp,++ptrOriginalRowDown) {
-	if(i == 0){
-	  ptrOriginalLeft=ptrOriginal;
-	  ptrOriginalRDLeft=ptrOriginalRowDown;
-	  ptrOriginalRULeft=ptrOriginalRowUp;
-	}else{
-	  ptrOriginalLeft=ptrOriginal-1;
-	  ptrOriginalRDLeft=ptrOriginalRowDown-1;
-	  ptrOriginalRULeft=ptrOriginalRowUp-1;
-	}
-	if(i == copia.cols-1){
-	  ptrOriginalRigth=ptrOriginal;
-	  ptrOriginalRDRigth = ptrOriginalRowDown;
-	  ptrOriginalRURigth = ptrOriginalRowUp;
-	}else{
-	  ptrOriginalRigth=ptrOriginal+1;
-	  ptrOriginalRDRigth = ptrOriginalRowDown+1;
-	  ptrOriginalRURigth = ptrOriginalRowUp+1;
-	}
-	xvalue = (ptrOriginalRowUp->x + ptrOriginalRowDown->x + ptrOriginalRURigth->x + ptrOriginalRULeft->x +ptrOriginalRDRigth->x + ptrOriginalRDLeft->x +  ptrOriginalRigth->x +  ptrOriginalLeft->x)/8;
-	ptr->x = xvalue;
-	//cout << "x = " << endl << " " << ptr->x << " "<< ptrOriginal->x << endl << endl;
-	yvalue = (ptrOriginalRowUp->y + ptrOriginalRowDown->y + ptrOriginalRURigth->y + ptrOriginalRULeft->y +ptrOriginalRDRigth->y + ptrOriginalRDLeft->y +  ptrOriginalRigth->y +  ptrOriginalLeft->y)/8;
-	ptr->y = yvalue;
-	//cout << "y = " << endl << " " << ptr->y << " "<< ptrOriginal->y << endl << endl;
-	zvalue = (ptrOriginalRowUp->z + ptrOriginalRowDown->z + ptrOriginalRURigth->z + ptrOriginalRULeft->z +ptrOriginalRDRigth->z + ptrOriginalRDLeft->z +  ptrOriginalRigth->z +  ptrOriginalLeft->z)/8;
-	ptr->z = zvalue;
-	//cout << "z = " << endl << " " << ptr->z << " "<< ptrOriginal->z << endl << endl;
+    cout << "cols = " << endl << " " << original.cols << endl << endl; 
+    cout << "rows = " << endl << " " << original.rows << endl << endl; 
+    for(int i = mitad; i<original.rows-mitad;i++){
+      int inicioRK = i-mitad;
+      Pixel* ptr = copia.ptr<Pixel>(i, 0);
+      ++ptr;
+      for(int j = mitad; j<original.cols-mitad;++ptr,j++){
+	cout<<"("<<i<<","<<j<<")"<<" ";
+	int inicioCK = j-mitad;
+	//Se usa para sustraer una submatriz operator()(RowRange,ColRange)
+	Mat subImagen = original.operator()(Range(inicioRK,inicioRK+kernel),Range(inicioRK,inicioRK+kernel));
+	Pixel final = sumKernel(&subImagen);
+	subImagen.release();
+	ptr->x = final.x;
+	ptr->y = final.y;
+	ptr->z = final.z;
       }
+      cout<<endl;
     }
+    cout <<"salida:"<<endl;
+    cout<<copia<<endl<<endl;
     namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
-    imshow(imageName,imagen);
+    imshow(imageName,original);
     cvWaitKey(0);
     namedWindow( "Blur-effect",WINDOW_NORMAL | WINDOW_KEEPRATIO );
     imshow("Blur-effect",copia);
     cvWaitKey(0);
     return 0;
+
   }
 }

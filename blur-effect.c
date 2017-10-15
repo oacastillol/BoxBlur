@@ -33,6 +33,7 @@ Pixel averangePixel(Pixel* p1,Pixel* p2){
   //  cout << " P2 x " << unsigned(p2->x) <<" y " << unsigned(p2->y) <<" z " << unsigned(p2->z) << endl;
   return Pixel((p1->x+p2->x)/2,(p1->y+p2->y)/2,(p1->z+p2->z)/2);
 }
+
 Pixel sumKernel(Mat* m){
   // cout << "m (python)  = " << endl << format(*m, Formatter::FMT_PYTHON) << endl << endl;
   if (m->rows != m->cols || m->rows % 2 != 1 ){
@@ -69,6 +70,38 @@ Pixel sumKernel(Mat* m){
   // cout<<"total x: "<<totalx<<" total y: "<<totaly<<" total z: "<<totalz<<" divide: "<<(m->rows * m->rows -1);
   return Pixel(totalx,totaly,totalz);
 }
+
+Pixel sumTotalMat(Mat* m,int re,int ce){
+  Pixel suma, *tmp ;
+  int x, y, z;
+  x = 0;
+  y = 0;
+  z = 0;
+  for (int r=0;r < m->rows; ++r ){
+    for(int c=0;c < m->cols; ++c){
+      if(r == 0 && c == 0){
+	tmp = m->ptr<Pixel>(r,c);
+	x = tmp->x;
+	y = tmp->y;
+	z = tmp->z;
+	continue;
+      }
+      if(r == re && c == ce)
+	continue;
+      tmp = m->ptr<Pixel>(r,c);
+      x += tmp->x;
+      y += tmp->y;
+      z += tmp->z;
+      //cout<<" r "<<r<<" c "<<c<<endl;
+    }
+  }
+  int totalx = x/(m->rows * m->rows -1);
+  int totaly = y/(m->rows * m->rows -1);
+  int totalz = z/(m->rows * m->rows -1);
+  // cout<<"total x: "<<totalx<<" total y: "<<totaly<<" total z: "<<totalz<<" divide: "<<(m->rows * m->rows -1);
+  return Pixel(totalx,totaly,totalz);
+}
+
 int main(int argc, char *argv[])
 {
   if ( argc != 3){
@@ -92,20 +125,22 @@ int main(int argc, char *argv[])
   }else{
     cout << "cols = " << endl << " " << original.cols << endl << endl; 
     cout << "rows = " << endl << " " << original.rows << endl << endl; 
-    for(int i = mitad; i<original.rows-mitad;i++){
+    for(int i = 0; i<original.rows;i++){
       int inicioRK = i-mitad;
-      for(int j = mitad; j<original.cols-mitad;j++){
+      for(int j = 0; j<original.cols;j++){
 	//cout<<"("<<i<<","<<j<<")"<<" ";
-	int inicioCK = j-mitad;
-	//Se usa para sustraer una submatriz operator()(RowRange,ColRange)
-	Mat subImagen = original.operator()(Range(inicioRK,inicioRK+kernel),Range(inicioCK,inicioCK+kernel));
-	Pixel final = sumKernel(&subImagen);
-	//	cout << " final x " << unsigned(final.x) <<" y " << unsigned(final.y) <<" z " << unsigned(final.z) << endl;
-	Pixel* ptr = copia.ptr<Pixel>(i, j);
-	subImagen.release();
-	ptr->x = final.x;
-	ptr->y = final.y;
-	ptr->z = final.z;
+	if(i>=mitad && j >=mitad && i<original.rows-mitad && j<original.cols -mitad){
+	  int inicioCK = j-mitad;
+	  //Se usa para sustraer una submatriz operator()(RowRange,ColRange)
+	  Mat subImagen = original.operator()(Range(inicioRK,inicioRK+kernel),Range(inicioCK,inicioCK+kernel));
+	  Pixel final = sumKernel(&subImagen);
+	  //	cout << " final x " << unsigned(final.x) <<" y " << unsigned(final.y) <<" z " << unsigned(final.z) << endl;
+	  Pixel* ptr = copia.ptr<Pixel>(i, j);
+	  subImagen.release();
+	  ptr->x = final.x;
+	  ptr->y = final.y;
+	  ptr->z = final.z;
+	}
       }
       //cout<<endl;
     }

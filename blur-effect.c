@@ -34,24 +34,40 @@ Pixel averangePixel(Pixel* p1,Pixel* p2){
   return Pixel((p1->x+p2->x)/2,(p1->y+p2->y)/2,(p1->z+p2->z)/2);
 }
 Pixel sumKernel(Mat* m){
+  // cout << "m (python)  = " << endl << format(*m, Formatter::FMT_PYTHON) << endl << endl;
   if (m->rows != m->cols || m->rows % 2 != 1 ){
     perror ("El kernel debe ser un número impar");
     exit(-1);
   }
   int  center = m->cols /2;
   Pixel suma, *tmp ;
+  int x, y, z;
+  x = 0;
+  y = 0;
+  z = 0;
   for (int r=0;r < m->rows; ++r ){
     for(int c=0;c < m->cols; ++c){
-      if(r == 0 && c == 0)
+      if(r == 0 && c == 0){
 	tmp = m->ptr<Pixel>(r,c);
+	x = tmp->x;
+	y = tmp->y;
+	z = tmp->z;
+	continue;
+      }
       if(r == center && c == center)
 	continue;
-      suma = averangePixel(tmp,m->ptr<Pixel>(r,c));
-      tmp = &suma; 
+      tmp = m->ptr<Pixel>(r,c);
+      x += tmp->x;
+      y += tmp->y;
+      z += tmp->z;
       //cout<<" r "<<r<<" c "<<c<<endl;
     }
   }
-  return suma;
+  int totalx = x/(m->rows * m->rows -1);
+  int totaly = y/(m->rows * m->rows -1);
+  int totalz = z/(m->rows * m->rows -1);
+  // cout<<"total x: "<<totalx<<" total y: "<<totaly<<" total z: "<<totalz<<" divide: "<<(m->rows * m->rows -1);
+  return Pixel(totalx,totaly,totalz);
 }
 int main(int argc, char *argv[])
 {
@@ -68,6 +84,8 @@ int main(int argc, char *argv[])
   char* imageName = argv[1];  
   Mat original = imread(imageName);
   Mat copia = original.clone();
+  //cout << "original (python)  = " << endl << format(original, Formatter::FMT_PYTHON) << endl << endl;
+  //  cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
   if (original.empty()){
     cout<<"No se pudo abrir la imagen "<<imageName<<endl;
     return -1;
@@ -76,15 +94,14 @@ int main(int argc, char *argv[])
     cout << "rows = " << endl << " " << original.rows << endl << endl; 
     for(int i = mitad; i<original.rows-mitad;i++){
       int inicioRK = i-mitad;
-      Pixel* ptr = copia.ptr<Pixel>(i, 0);
-      ++ptr;
-      for(int j = mitad; j<original.cols-mitad;++ptr,j++){
+      for(int j = mitad; j<original.cols-mitad;j++){
 	//cout<<"("<<i<<","<<j<<")"<<" ";
 	int inicioCK = j-mitad;
 	//Se usa para sustraer una submatriz operator()(RowRange,ColRange)
 	Mat subImagen = original.operator()(Range(inicioRK,inicioRK+kernel),Range(inicioCK,inicioCK+kernel));
 	Pixel final = sumKernel(&subImagen);
 	//	cout << " final x " << unsigned(final.x) <<" y " << unsigned(final.y) <<" z " << unsigned(final.z) << endl;
+	Pixel* ptr = copia.ptr<Pixel>(i, j);
 	subImagen.release();
 	ptr->x = final.x;
 	ptr->y = final.y;
@@ -92,11 +109,12 @@ int main(int argc, char *argv[])
       }
       //cout<<endl;
     }
+    // cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
     //cout <<"salida:"<<endl;
     //cout<<copia<<endl<<endl;
     namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
     imshow(imageName,original);
-    cvWaitKey(0);
+    imwrite("copia.png",copia);
     namedWindow( "Blur-effect",WINDOW_NORMAL | WINDOW_KEEPRATIO );
     imshow("Blur-effect",copia);
     cvWaitKey(0);

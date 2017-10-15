@@ -68,6 +68,9 @@ int main(int argc, char *argv[])
       Pixel* ptrOriginalRURigth;
       Pixel* ptrOriginalLeft;
       Pixel* ptrOriginalRigth;
+      int xvalue;
+      int yvalue;
+      int zvalue;
       for (int  i = 0; ptr != ptr_end;++i, ++ptr,++ptrOriginal, ++ptrOriginalRowUp,++ptrOriginalRowDown) {
 	if(i == 0){
 	  ptrOriginalLeft=ptrOriginal;
@@ -87,19 +90,22 @@ int main(int argc, char *argv[])
 	  ptrOriginalRDRigth = ptrOriginalRowDown+1;
 	  ptrOriginalRURigth = ptrOriginalRowUp+1;
 	}
-	ptr->x = (ptrOriginalRowUp->x + ptrOriginalRowDown->x + ptrOriginalRURigth->x + ptrOriginalRULeft->x +ptrOriginalRDRigth->x + ptrOriginalRDLeft->x +  ptrOriginalRigth->x +  ptrOriginalLeft->x)/8;
+	xvalue = (ptrOriginalRowUp->x + ptrOriginalRowDown->x + ptrOriginalRURigth->x + ptrOriginalRULeft->x +ptrOriginalRDRigth->x + ptrOriginalRDLeft->x +  ptrOriginalRigth->x +  ptrOriginalLeft->x)/8;
+	ptr->x = xvalue;
 	//cout << "x = " << endl << " " << ptr->x << " "<< ptrOriginal->x << endl << endl;
-	ptr->y = (ptrOriginalRowUp->y + ptrOriginalRowDown->y + ptrOriginalRURigth->y + ptrOriginalRULeft->y +ptrOriginalRDRigth->y + ptrOriginalRDLeft->y +  ptrOriginalRigth->y +  ptrOriginalLeft->y)/8;
+	yvalue = (ptrOriginalRowUp->y + ptrOriginalRowDown->y + ptrOriginalRURigth->y + ptrOriginalRULeft->y +ptrOriginalRDRigth->y + ptrOriginalRDLeft->y +  ptrOriginalRigth->y +  ptrOriginalLeft->y)/8;
+	ptr->y = yvalue;
 	//cout << "y = " << endl << " " << ptr->y << " "<< ptrOriginal->y << endl << endl;
-	ptr->z = (ptrOriginalRowUp->z + ptrOriginalRowDown->z + ptrOriginalRURigth->z + ptrOriginalRULeft->z +ptrOriginalRDRigth->z + ptrOriginalRDLeft->z +  ptrOriginalRigth->z +  ptrOriginalLeft->z)/8;
+	zvalue = (ptrOriginalRowUp->z + ptrOriginalRowDown->z + ptrOriginalRURigth->z + ptrOriginalRULeft->z +ptrOriginalRDRigth->z + ptrOriginalRDLeft->z +  ptrOriginalRigth->z +  ptrOriginalLeft->z)/8;
+	ptr->z = zvalue;
 	//cout << "z = " << endl << " " << ptr->z << " "<< ptrOriginal->z << endl << endl;
       }
     }
     namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
     imshow(imageName,imagen);
     cvWaitKey(0);
-    namedWindow( "copia",WINDOW_NORMAL | WINDOW_KEEPRATIO );
-    imshow("copia",copia);
+    namedWindow( "Blur-effect",WINDOW_NORMAL | WINDOW_KEEPRATIO );
+    imshow("Blur-effect",copia);
     cvWaitKey(0);
     return 0;
   }

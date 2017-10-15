@@ -1,5 +1,6 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
+#include <cstdlib>
 #include <iostream>
 typedef cv::Point3_<uint8_t> Pixel;
 using namespace std;
@@ -28,9 +29,9 @@ string type2str(int type) {
   return r;
 }
 Pixel averangePixel(Pixel* p1,Pixel* p2){
-  //cout << " P1 x " << unsigned(p1->x) <<" y " << unsigned(p1->y) <<" z " << unsigned(p1->z) << endl;
-  //cout << " P2 x " << unsigned(p2->x) <<" y " << unsigned(p2->y) <<" z " << unsigned(p2->z) << endl;
-    return Pixel((p1->x+p2->x)/2,(p1->x+p2->x)/2,(p1->x+p2->x)/2);
+  //  cout << " P1 x " << unsigned(p1->x) <<" y " << unsigned(p1->y) <<" z " << unsigned(p1->z) << endl;
+  //  cout << " P2 x " << unsigned(p2->x) <<" y " << unsigned(p2->y) <<" z " << unsigned(p2->z) << endl;
+  return Pixel((p1->x+p2->x)/2,(p1->y+p2->y)/2,(p1->z+p2->z)/2);
 }
 Pixel sumKernel(Mat* m){
   if (m->rows != m->cols || m->rows % 2 != 1 ){
@@ -38,14 +39,15 @@ Pixel sumKernel(Mat* m){
     exit(-1);
   }
   int  center = m->cols /2;
-  Pixel suma ;
+  Pixel suma, *tmp ;
   for (int r=0;r < m->rows; ++r ){
     for(int c=0;c < m->cols; ++c){
       if(r == 0 && c == 0)
-	suma = *m->ptr<Pixel>(r,c);
+	tmp = m->ptr<Pixel>(r,c);
       if(r == center && c == center)
 	continue;
-      suma = averangePixel(&suma,m->ptr<Pixel>(r,c));
+      suma = averangePixel(tmp,m->ptr<Pixel>(r,c));
+      tmp = &suma; 
       //cout<<" r "<<r<<" c "<<c<<endl;
     }
   }
@@ -53,12 +55,16 @@ Pixel sumKernel(Mat* m){
 }
 int main(int argc, char *argv[])
 {
-  int kernel = 3;
-  int mitad = kernel / 2;
-  if ( argc != 2){
-    cout<<"Se debe ejecutar como ./blur-effect <imageName.ext>\n";
+  if ( argc != 3){
+    cout<<"Se debe ejecutar como ./blur-effect <imageName.ext> NumeroKernel\n Donde NumeroKernel debe ser impar\n";
     return -1;
   }
+  int kernel = atoi(argv[2]);;
+  if (kernel % 2 != 1 ){
+    cout<<"NumeroKernel debe ser un numero impar\n";
+    return -1;
+  }
+  int mitad = kernel / 2;
   char* imageName = argv[1];  
   Mat original = imread(imageName);
   Mat copia = original.clone();
@@ -73,20 +79,21 @@ int main(int argc, char *argv[])
       Pixel* ptr = copia.ptr<Pixel>(i, 0);
       ++ptr;
       for(int j = mitad; j<original.cols-mitad;++ptr,j++){
-	cout<<"("<<i<<","<<j<<")"<<" ";
+	//cout<<"("<<i<<","<<j<<")"<<" ";
 	int inicioCK = j-mitad;
 	//Se usa para sustraer una submatriz operator()(RowRange,ColRange)
-	Mat subImagen = original.operator()(Range(inicioRK,inicioRK+kernel),Range(inicioRK,inicioRK+kernel));
+	Mat subImagen = original.operator()(Range(inicioRK,inicioRK+kernel),Range(inicioCK,inicioCK+kernel));
 	Pixel final = sumKernel(&subImagen);
+	//	cout << " final x " << unsigned(final.x) <<" y " << unsigned(final.y) <<" z " << unsigned(final.z) << endl;
 	subImagen.release();
 	ptr->x = final.x;
 	ptr->y = final.y;
 	ptr->z = final.z;
       }
-      cout<<endl;
+      //cout<<endl;
     }
-    cout <<"salida:"<<endl;
-    cout<<copia<<endl<<endl;
+    //cout <<"salida:"<<endl;
+    //cout<<copia<<endl<<endl;
     namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
     imshow(imageName,original);
     cvWaitKey(0);

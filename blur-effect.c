@@ -6,28 +6,7 @@ typedef cv::Point3_<uint8_t> Pixel;
 using namespace std;
 using namespace cv;
 
-string type2str(int type) {
-  string r;
 
-  uchar depth = type & CV_MAT_DEPTH_MASK;
-  uchar chans = 1 + (type >> CV_CN_SHIFT);
-
-  switch ( depth ) {
-    case CV_8U:  r = "8U"; break;
-    case CV_8S:  r = "8S"; break;
-    case CV_16U: r = "16U"; break;
-    case CV_16S: r = "16S"; break;
-    case CV_32S: r = "32S"; break;
-    case CV_32F: r = "32F"; break;
-    case CV_64F: r = "64F"; break;
-    default:     r = "User"; break;
-  }
-
-  r += "C";
-  r += (chans+'0');
-
-  return r;
-}
 Pixel averangePixel(Pixel* p1,Pixel* p2){
   //  cout << " P1 x " << unsigned(p1->x) <<" y " << unsigned(p1->y) <<" z " << unsigned(p1->z) << endl;
   //  cout << " P2 x " << unsigned(p2->x) <<" y " << unsigned(p2->y) <<" z " << unsigned(p2->z) << endl;
@@ -106,7 +85,7 @@ int main(int argc, char *argv[])
     cout<<"Se debe ejecutar como ./blur-effect <imageName.ext> NumeroKernel\n Donde NumeroKernel debe ser impar\n";
     return -1;
   }
-  int kernel = atoi(argv[2]);;
+  int kernel = atoi(argv[2]);
   if (kernel % 2 != 1 ){
     cout<<"NumeroKernel debe ser un numero impar\n";
     return -1;
@@ -128,6 +107,10 @@ int main(int argc, char *argv[])
       int finRK = i+mitad;
       for(int j = 0; j<original.cols;j++){
 	//cout<<"("<<i<<","<<j<<")"<<" ";
+	/* Si se encuentra dentro de los limites se calcula el kernel de manera normal  */
+	/* excluyendo el centro del kernel y asignandole el promedio de sus bordes */
+	/* pero si este se encuentra muy al borde no se puede calcular dentro de un kernel */
+	/* cuadrado */
 	if(i>=mitad && j >=mitad && i<original.rows-mitad && j<original.cols -mitad){
 	  int inicioCK = j-mitad;
 	  //Se usa para sustraer una submatriz operator()(RowRange,ColRange)
@@ -140,6 +123,9 @@ int main(int argc, char *argv[])
 	  ptr->y = final.y;
 	  ptr->z = final.z;
 	}else{
+	  /* Cuando el pixel se encuentra en el borde de la imagen se calcula el promedio de la matriz */
+	  /* cuyo tamaño máximo es el tamaño del kernel, pero al no ser cuadrada la matriz se calcula el promedio */
+	  /*   incluyendo el pixel de la posicion */
 	  int inicioCK = j-mitad;
 	  int finCK = j+mitad;
 	  if (inicioRK<0)

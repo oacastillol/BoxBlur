@@ -4,16 +4,20 @@
 #include <iostream>
 #include <pthread.h>
 
-typedef cv::Point3_<uint8_t> Pixel;
-
 using namespace std;
 using namespace cv;
 
+typedef cv::Point3_<uint8_t> Pixel;
+//parametros que se enviaran para los hilos
+struct thread_data {
+  int thread_id;
+  int xinicio, xfin;
+  int yinicio, yfin;
+
+}
+// variables Globales
 Mat original, copia;
 
-Pixel averangePixel(Pixel* p1,Pixel* p2){
-  return Pixel((p1->x+p2->x)/2,(p1->y+p2->y)/2,(p1->z+p2->z)/2);
-}
 
 Pixel sumKernel(Mat* m){
   if (m->rows != m->cols || m->rows % 2 != 1 ){
@@ -75,11 +79,19 @@ Pixel sumTotalMat(Mat* m){
   int totalz = z/(m->rows * m->cols);
   return Pixel(totalx,totaly,totalz);
 }
-void* blurCalculate(){
-  for(int i = 0; i<original.rows;i++){
+void* blurCalculate(void *threadData){
+  struct thread_data *data;
+  data = (struct thread_data *) threadData;
+  int xinicio, xfin;
+  int yinicio, yfin;
+  xinicio = data-> xinicio;
+  xfin = data->xfin;
+  yinicio = data->yinicio;
+  yfin = data->yfin;
+  for(int i = xinicio; i<xfin;i++){
       int inicioRK = i-mitad;
       int finRK = i+mitad;
-      for(int j = 0; j<original.cols;j++){
+      for(int j = yinicio; j<yfinal;j++){
 	//cout<<"("<<i<<","<<j<<")"<<" ";
 	/* Si se encuentra dentro de los limites se calcula el kernel de manera normal  */
 	/* excluyendo el centro del kernel y asignandole el promedio de sus bordes */

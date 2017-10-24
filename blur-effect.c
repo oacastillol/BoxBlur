@@ -80,6 +80,7 @@ Pixel sumTotalMat(Mat* m){
   int totalz = z/(m->rows * m->cols);
   return Pixel(totalx,totaly,totalz);
 }
+
 void* blurCalculate(void *threadData){
   struct thread_data *data;
   data = (struct thread_data *) threadData;
@@ -139,9 +140,55 @@ void* blurCalculate(void *threadData){
 
 }
 
+// Crea bloques coordenados para ser asignados a cada uno de los hilos.
+/*  rows: filas de la imágen original
+    cols: columnas de la imagen original
+    thrds: cantidad de hilos a usar
+    thread_data_array: coordenadas x,y iniciales y finales para cada hilo
+*/
+void block(int rows, int cols, int thrds, thread_data thread_data_array[]){
+  int fact[100];    //Almacenar factores de "thrds".
+  int i_fact=0;     //Recorrer el arreglo "fact[]".
+  int i=2;          //Verificar los factores desde 2.
+  int r = 1;        //Cantidad de filas
+  int c = 1;        //Cantidad de columnas
+  int rs, cs;       //Separacion de filas y columnas
 
-int main(int argc, char *argv[])
-{
+  while(i<=thrds){
+    if((thrds%i)==0){ //a%b=0, implica que b es factor de a.
+      fact[i_fact]=i; //Añadimos factor al arreglo.
+      thrds=thrds/i;  //Procesamos variable "thrds".
+      i_fact++;       //Incrementamos indice.
+      continue;
+    }
+    i++;              //Incrementamos indice.
+  }
+
+  for(i=0; i<i_fact; i++){ //Calcula 2 factores balanceados r*c=thrds
+    if(i%2==0)
+      r*=fact[i];
+    else
+      c*=fact[i];
+  }
+
+  rs=rows/r;
+  cs=cols/c;
+  thrds=0;
+
+  for(int x=0;x<c;x++){
+    for(int y=0;y<r;y++){
+      thread_data_array[thrds].thread_id = thrds;
+      thread_data_array[thrds].xinicio = x*cs;
+      thread_data_array[thrds].xfin = (x+1)*cs;
+      thread_data_array[thrds].yinicio = y*rs;
+      thread_data_array[thrds].yfin = (y+1)*rs;
+      thrds++;
+    }
+  }
+}
+
+
+int main(int argc, char *argv[]){
   if ( argc < 3 && argc > 4){
     cout<<"Se debe ejecutar como ./blur-effect <imageName.ext> NumeroKernel <cantidadHilos>\n Donde NumeroKernel debe ser impar y\ncantidadHilosdebe ser menor a 16, por defecto es 1";
     return -1;
@@ -160,7 +207,7 @@ int main(int argc, char *argv[])
     }
   }
   mitad = kernel / 2;
-  char* imageName = argv[1];  
+  char* imageName = argv[1];
   original = imread(imageName);
   copia = original.clone();
   //cout << "original (python)  = " << endl << format(original, Formatter::FMT_PYTHON) << endl << endl;
@@ -169,8 +216,8 @@ int main(int argc, char *argv[])
     cout<<"No se pudo abrir la imagen "<<imageName<<endl;
     return -1;
   }else{
-    cout << "cols = " << endl << " " << original.cols << endl << endl; 
-    cout << "rows = " << endl << " " << original.rows << endl << endl; 
+    cout << "cols = " << endl << " " << original.cols << endl << endl;
+    cout << "rows = " << endl << " " << original.rows << endl << endl;
     pthread_t threads[ nThread ];
     int *threadId[ nThread ];
     // cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;

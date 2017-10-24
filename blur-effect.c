@@ -1,20 +1,26 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
+#include <string.h>
 #include <cstdlib>
 #include <iostream>
-typedef cv::Point3_<uint8_t> Pixel;
+#include <pthread.h>
+
 using namespace std;
 using namespace cv;
 
+typedef cv::Point3_<uint8_t> Pixel;
+//parametros que se enviaran para los hilos
+struct thread_data {
+  int thread_id;
+  int xinicio, xfin;
+  int yinicio, yfin;
 
-Pixel averangePixel(Pixel* p1,Pixel* p2){
-  //  cout << " P1 x " << unsigned(p1->x) <<" y " << unsigned(p1->y) <<" z " << unsigned(p1->z) << endl;
-  //  cout << " P2 x " << unsigned(p2->x) <<" y " << unsigned(p2->y) <<" z " << unsigned(p2->z) << endl;
-  return Pixel((p1->x+p2->x)/2,(p1->y+p2->y)/2,(p1->z+p2->z)/2);
-}
+};
+// variables Globales
+Mat original, copia;
+int mitad, kernel;
 
 Pixel sumKernel(Mat* m){
-  // cout << "m (python)  = " << endl << format(*m, Formatter::FMT_PYTHON) << endl << endl;
   if (m->rows != m->cols || m->rows % 2 != 1 ){
     perror ("El kernel debe ser un número impar");
     exit(-1);
@@ -40,13 +46,11 @@ Pixel sumKernel(Mat* m){
       x += tmp->x;
       y += tmp->y;
       z += tmp->z;
-      //cout<<" r "<<r<<" c "<<c<<endl;
     }
   }
   int totalx = x/(m->rows * m->rows -1);
   int totaly = y/(m->rows * m->rows -1);
   int totalz = z/(m->rows * m->rows -1);
-  // cout<<"total x: "<<totalx<<" total y: "<<totaly<<" total z: "<<totalz<<" divide: "<<(m->rows * m->rows -1);
   return Pixel(totalx,totaly,totalz);
 }
 
@@ -69,43 +73,27 @@ Pixel sumTotalMat(Mat* m){
       x += tmp->x;
       y += tmp->y;
       z += tmp->z;
-      //cout<<" r "<<r<<" c "<<c<<endl;
     }
   }
   int totalx = x/(m->rows * m->cols);
   int totaly = y/(m->rows * m->cols);
   int totalz = z/(m->rows * m->cols);
-  // cout<<"total x: "<<totalx<<" total y: "<<totaly<<" total z: "<<totalz<<" divide: "<<(m->rows * m->rows -1);
   return Pixel(totalx,totaly,totalz);
 }
 
-int main(int argc, char *argv[])
-{
-  if ( argc != 3){
-    cout<<"Se debe ejecutar como ./blur-effect <imageName.ext> NumeroKernel\n Donde NumeroKernel debe ser impar\n";
-    return -1;
-  }
-  int kernel = atoi(argv[2]);
-  if (kernel % 2 != 1 ){
-    cout<<"NumeroKernel debe ser un numero impar\n";
-    return -1;
-  }
-  int mitad = kernel / 2;
-  char* imageName = argv[1];  
-  Mat original = imread(imageName);
-  Mat copia = original.clone();
-  //cout << "original (python)  = " << endl << format(original, Formatter::FMT_PYTHON) << endl << endl;
-  //  cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
-  if (original.empty()){
-    cout<<"No se pudo abrir la imagen "<<imageName<<endl;
-    return -1;
-  }else{
-    cout << "cols = " << endl << " " << original.cols << endl << endl; 
-    cout << "rows = " << endl << " " << original.rows << endl << endl; 
-    for(int i = 0; i<original.rows;i++){
+void* blurCalculate(void *threadData){
+  struct thread_data *data;
+  data = (struct thread_data *) threadData;
+  int xinicio, xfin;
+  int yinicio, yfin;
+  xinicio = data-> xinicio;
+  xfin = data->xfin;
+  yinicio = data->yinicio;
+  yfin = data->yfin;
+  for(int i = xinicio; i<xfin;i++){
       int inicioRK = i-mitad;
       int finRK = i+mitad;
-      for(int j = 0; j<original.cols;j++){
+      for(int j = yinicio; j<yfin;j++){
 	//cout<<"("<<i<<","<<j<<")"<<" ";
 	/* Si se encuentra dentro de los limites se calcula el kernel de manera normal  */
 	/* excluyendo el centro del kernel y asignandole el promedio de sus bordes */
@@ -149,15 +137,117 @@ int main(int argc, char *argv[])
       }
       //cout<<endl;
     }
+
+}
+
+// Crea bloques coordenados para ser asignados a cada uno de los hilos.
+/*  rows: filas de la imágen original
+    cols: columnas de la imagen original
+    thrds: cantidad de hilos a usar
+    thread_data_array: coordenadas x,y iniciales y finales para cada hilo
+*/
+void block(int rows, int cols, int thrds, thread_data thread_data_array[]){
+  int fact[100];    //Almacenar factores de "thrds".
+  int i_fact=0;     //Recorrer el arreglo "fact[]".
+  int i=2;          //Verificar los factores desde 2.
+  int r = 1;        //Cantidad de filas
+  int c = 1;        //Cantidad de columnas
+  int rs, cs;       //Separacion de filas y columnas
+
+  while(i<=thrds){
+    if((thrds%i)==0){ //a%b=0, implica que b es factor de a.
+      fact[i_fact]=i; //Añadimos factor al arreglo.
+      thrds=thrds/i;  //Procesamos variable "thrds".
+      i_fact++;       //Incrementamos indice.
+      continue;
+    }
+    i++;              //Incrementamos indice.
+  }
+
+  for(i=0; i<i_fact; i++){ //Calcula 2 factores balanceados r*c=thrds
+    if(i%2==0)
+      r*=fact[i];
+    else
+      c*=fact[i];
+  }
+
+  rs=rows/r;
+  cs=cols/c;
+  thrds=0;
+
+  for(int x=0;x<c;x++){
+    for(int y=0;y<r;y++){
+      thread_data_array[thrds].thread_id = thrds;
+      thread_data_array[thrds].xinicio = x*cs;
+      thread_data_array[thrds].xfin = (x+1)*cs;
+      thread_data_array[thrds].yinicio = y*rs;
+      thread_data_array[thrds].yfin = (y+1)*rs;
+      thrds++;
+    }
+  }
+}
+
+
+int main(int argc, char *argv[]){
+  if ( argc < 3 || argc > 4){
+    cout<<"Se debe ejecutar como ./blur-effect <imageName.ext> NumeroKernel <cantidadHilos>\n Donde NumeroKernel debe ser impar y\ncantidadHilosdebe ser menor a 16, por defecto es 1\n";
+    return -1;
+  }
+  kernel = atoi(argv[2]);
+  int nThread = 1;
+  if (kernel % 2 != 1 ){
+    cout<<"NumeroKernel debe ser un numero impar\n";
+    return -1;
+  }
+  if ( argc == 4){
+    int nThread = atoi(argv[3]);
+    if (nThread > 16 || nThread<1){
+      cout<<"El número de hilos debe estar entre 1 y 16";
+      return -1;
+    }
+  }
+  mitad = kernel / 2;
+  char* imageName = argv[1];
+  original = imread(imageName);
+  copia = original.clone();
+  //cout << "original (python)  = " << endl << format(original, Formatter::FMT_PYTHON) << endl << endl;
+  //  cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
+  if (original.empty()){
+    cout<<"No se pudo abrir la imagen "<<imageName<<endl;
+    return -1;
+  }else{
+    //cout << "cols = " << endl << " " << original.cols << endl << endl;
+    //cout << "rows = " << endl << " " << original.rows << endl << endl;
+    struct thread_data  thread_data_array[nThread];
+    pthread_t threads[ nThread ];
+    int *threadId[ nThread ];
     // cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
     //cout <<"salida:"<<endl;
     //cout<<copia<<endl<<endl;
-    namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
-    imshow(imageName,original);
-    imwrite("copia.png",copia);
-    namedWindow( "Blur-effect",WINDOW_NORMAL | WINDOW_KEEPRATIO );
-    imshow("Blur-effect",copia);
-    cvWaitKey(0);
+    block(original.cols,original.rows,nThread,thread_data_array);
+    for(int t=0,rc=0; t < nThread;t++){
+      rc = pthread_create(&threads[t],NULL,blurCalculate,(void *)&thread_data_array[t]);
+      if(rc) {
+	cout<<"Error al crear el hilo "<<t<<endl;
+	exit(-1);
+      }
+    }
+    //namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
+    //imshow(imageName,original);
+    for(int t=0,rc=0; t < nThread;t++){
+      rc = pthread_join(threads[t],NULL);
+      if(rc) {
+	cout<<"Error al crear el hilo "<<t<<endl;
+	exit(-1);
+      }
+    }
+    char str[100];
+    strcpy(str,"blur-");
+    strcat(str,imageName);
+    imwrite(str,copia);
+    //namedWindow( "Blur-effect",WINDOW_NORMAL | WINDOW_KEEPRATIO );
+    //imshow("Blur-effect",copia);
+    //cvWaitKey(0);
     return 0;
 
   }

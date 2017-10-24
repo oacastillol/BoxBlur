@@ -1,5 +1,6 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
+#include <string.h>
 #include <cstdlib>
 #include <iostream>
 #include <pthread.h>
@@ -14,10 +15,10 @@ struct thread_data {
   int xinicio, xfin;
   int yinicio, yfin;
 
-}
+};
 // variables Globales
 Mat original, copia;
-
+int mitad, kernel;
 
 Pixel sumKernel(Mat* m){
   if (m->rows != m->cols || m->rows % 2 != 1 ){
@@ -91,7 +92,7 @@ void* blurCalculate(void *threadData){
   for(int i = xinicio; i<xfin;i++){
       int inicioRK = i-mitad;
       int finRK = i+mitad;
-      for(int j = yinicio; j<yfinal;j++){
+      for(int j = yinicio; j<yfin;j++){
 	//cout<<"("<<i<<","<<j<<")"<<" ";
 	/* Si se encuentra dentro de los limites se calcula el kernel de manera normal  */
 	/* excluyendo el centro del kernel y asignandole el promedio de sus bordes */
@@ -145,7 +146,7 @@ int main(int argc, char *argv[])
     cout<<"Se debe ejecutar como ./blur-effect <imageName.ext> NumeroKernel <cantidadHilos>\n Donde NumeroKernel debe ser impar y\ncantidadHilosdebe ser menor a 16, por defecto es 1";
     return -1;
   }
-  int kernel = atoi(argv[2]);
+  kernel = atoi(argv[2]);
   int nThread = 1;
   if (kernel % 2 != 1 ){
     cout<<"NumeroKernel debe ser un numero impar\n";
@@ -158,7 +159,7 @@ int main(int argc, char *argv[])
       return -1;
     }
   }
-  int mitad = kernel / 2;
+  mitad = kernel / 2;
   char* imageName = argv[1];  
   original = imread(imageName);
   copia = original.clone();
@@ -170,13 +171,31 @@ int main(int argc, char *argv[])
   }else{
     cout << "cols = " << endl << " " << original.cols << endl << endl; 
     cout << "rows = " << endl << " " << original.rows << endl << endl; 
-    
+    pthread_t threads[ nThread ];
+    int *threadId[ nThread ];
     // cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
     //cout <<"salida:"<<endl;
     //cout<<copia<<endl<<endl;
+    for(int t=0,rc=0; t < nThread;t++){
+      rc = pthread_create(&threads[t],NULL,blurCalculate,(void *));
+      if(rc) {
+	cout<<"Error al crear el hilo "<<t<<endl;
+	exit(-1)
+      }
+    }
     namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
     imshow(imageName,original);
-    imwrite("copia.png",copia);
+    for(int t=0,rc=0; t < nThread;t++){
+      rc = pthread_join(&threads[t],NULL);
+      if(rc) {
+	cout<<"Error al crear el hilo "<<t<<endl;
+	exit(-1)
+      }
+    }
+    char str[100];
+    strcpy(str,"blur");
+    strcat(str,imageName);
+    imwrite(str,copia);
     namedWindow( "Blur-effect",WINDOW_NORMAL | WINDOW_KEEPRATIO );
     imshow("Blur-effect",copia);
     cvWaitKey(0);

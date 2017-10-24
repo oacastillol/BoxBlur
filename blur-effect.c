@@ -2,19 +2,20 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <iostream>
+#include <pthread.h>
+
 typedef cv::Point3_<uint8_t> Pixel;
+
 using namespace std;
 using namespace cv;
 
+Mat original, copia;
 
 Pixel averangePixel(Pixel* p1,Pixel* p2){
-  //  cout << " P1 x " << unsigned(p1->x) <<" y " << unsigned(p1->y) <<" z " << unsigned(p1->z) << endl;
-  //  cout << " P2 x " << unsigned(p2->x) <<" y " << unsigned(p2->y) <<" z " << unsigned(p2->z) << endl;
   return Pixel((p1->x+p2->x)/2,(p1->y+p2->y)/2,(p1->z+p2->z)/2);
 }
 
 Pixel sumKernel(Mat* m){
-  // cout << "m (python)  = " << endl << format(*m, Formatter::FMT_PYTHON) << endl << endl;
   if (m->rows != m->cols || m->rows % 2 != 1 ){
     perror ("El kernel debe ser un número impar");
     exit(-1);
@@ -40,13 +41,11 @@ Pixel sumKernel(Mat* m){
       x += tmp->x;
       y += tmp->y;
       z += tmp->z;
-      //cout<<" r "<<r<<" c "<<c<<endl;
     }
   }
   int totalx = x/(m->rows * m->rows -1);
   int totaly = y/(m->rows * m->rows -1);
   int totalz = z/(m->rows * m->rows -1);
-  // cout<<"total x: "<<totalx<<" total y: "<<totaly<<" total z: "<<totalz<<" divide: "<<(m->rows * m->rows -1);
   return Pixel(totalx,totaly,totalz);
 }
 
@@ -69,40 +68,15 @@ Pixel sumTotalMat(Mat* m){
       x += tmp->x;
       y += tmp->y;
       z += tmp->z;
-      //cout<<" r "<<r<<" c "<<c<<endl;
     }
   }
   int totalx = x/(m->rows * m->cols);
   int totaly = y/(m->rows * m->cols);
   int totalz = z/(m->rows * m->cols);
-  // cout<<"total x: "<<totalx<<" total y: "<<totaly<<" total z: "<<totalz<<" divide: "<<(m->rows * m->rows -1);
   return Pixel(totalx,totaly,totalz);
 }
-
-int main(int argc, char *argv[])
-{
-  if ( argc != 3){
-    cout<<"Se debe ejecutar como ./blur-effect <imageName.ext> NumeroKernel\n Donde NumeroKernel debe ser impar\n";
-    return -1;
-  }
-  int kernel = atoi(argv[2]);
-  if (kernel % 2 != 1 ){
-    cout<<"NumeroKernel debe ser un numero impar\n";
-    return -1;
-  }
-  int mitad = kernel / 2;
-  char* imageName = argv[1];  
-  Mat original = imread(imageName);
-  Mat copia = original.clone();
-  //cout << "original (python)  = " << endl << format(original, Formatter::FMT_PYTHON) << endl << endl;
-  //  cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
-  if (original.empty()){
-    cout<<"No se pudo abrir la imagen "<<imageName<<endl;
-    return -1;
-  }else{
-    cout << "cols = " << endl << " " << original.cols << endl << endl; 
-    cout << "rows = " << endl << " " << original.rows << endl << endl; 
-    for(int i = 0; i<original.rows;i++){
+void* blurCalculate(){
+  for(int i = 0; i<original.rows;i++){
       int inicioRK = i-mitad;
       int finRK = i+mitad;
       for(int j = 0; j<original.cols;j++){
@@ -149,6 +123,42 @@ int main(int argc, char *argv[])
       }
       //cout<<endl;
     }
+
+}
+
+
+int main(int argc, char *argv[])
+{
+  if ( argc < 3 && argc > 4){
+    cout<<"Se debe ejecutar como ./blur-effect <imageName.ext> NumeroKernel <cantidadHilos>\n Donde NumeroKernel debe ser impar y\ncantidadHilosdebe ser menor a 16, por defecto es 1";
+    return -1;
+  }
+  int kernel = atoi(argv[2]);
+  int nThread = 1;
+  if (kernel % 2 != 1 ){
+    cout<<"NumeroKernel debe ser un numero impar\n";
+    return -1;
+  }
+  if ( argc == 4){
+    int nThread = atoi(argv[3]);
+    if (nThread > 16){
+      cout<<"El número de hilos debe ser menor a 16";
+      return -1;
+    }
+  }
+  int mitad = kernel / 2;
+  char* imageName = argv[1];  
+  original = imread(imageName);
+  copia = original.clone();
+  //cout << "original (python)  = " << endl << format(original, Formatter::FMT_PYTHON) << endl << endl;
+  //  cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
+  if (original.empty()){
+    cout<<"No se pudo abrir la imagen "<<imageName<<endl;
+    return -1;
+  }else{
+    cout << "cols = " << endl << " " << original.cols << endl << endl; 
+    cout << "rows = " << endl << " " << original.rows << endl << endl; 
+    
     // cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
     //cout <<"salida:"<<endl;
     //cout<<copia<<endl<<endl;

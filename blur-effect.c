@@ -86,10 +86,12 @@ void* blurCalculate(void *threadData){
   data = (struct thread_data *) threadData;
   int xinicio, xfin;
   int yinicio, yfin;
+  cout<<"hilo";
   xinicio = data-> xinicio;
   xfin = data->xfin;
   yinicio = data->yinicio;
   yfin = data->yfin;
+  cout<<xfin;
   for(int i = xinicio; i<xfin;i++){
       int inicioRK = i-mitad;
       int finRK = i+mitad;
@@ -218,29 +220,30 @@ int main(int argc, char *argv[]){
   }else{
     cout << "cols = " << endl << " " << original.cols << endl << endl;
     cout << "rows = " << endl << " " << original.rows << endl << endl;
+    struct thread_data  thread_data_array[nThread];
     pthread_t threads[ nThread ];
     int *threadId[ nThread ];
     // cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
     //cout <<"salida:"<<endl;
     //cout<<copia<<endl<<endl;
     for(int t=0,rc=0; t < nThread;t++){
-      rc = pthread_create(&threads[t],NULL,blurCalculate,(void *));
+      rc = pthread_create(&threads[t],NULL,blurCalculate,(void *)&thread_data_array[t]);
       if(rc) {
 	cout<<"Error al crear el hilo "<<t<<endl;
-	exit(-1)
+	exit(-1);
       }
     }
     namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
     imshow(imageName,original);
     for(int t=0,rc=0; t < nThread;t++){
-      rc = pthread_join(&threads[t],NULL);
+      rc = pthread_join(threads[t],NULL);
       if(rc) {
 	cout<<"Error al crear el hilo "<<t<<endl;
-	exit(-1)
+	exit(-1);
       }
     }
     char str[100];
-    strcpy(str,"blur");
+    strcpy(str,"blur-");
     strcat(str,imageName);
     imwrite(str,copia);
     namedWindow( "Blur-effect",WINDOW_NORMAL | WINDOW_KEEPRATIO );

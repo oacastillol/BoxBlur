@@ -1,0 +1,15 @@
+#!/bin/bash
+
+make
+
+imagenes=('720p.png' '4K.jpg' '1080p.png')
+echo "Resultados de la ejecucion" > resultados.txt;
+for item in ${imagenes[@]}
+do
+    for kernel in {1..15}
+    do
+	echo "nombre "$item" kernel:"$kernel >> resultados.txt;
+	tiempo=`time ls`;
+	echo $tiempo >> resultados.txt;
+    done
+done

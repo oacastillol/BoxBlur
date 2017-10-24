@@ -86,12 +86,10 @@ void* blurCalculate(void *threadData){
   data = (struct thread_data *) threadData;
   int xinicio, xfin;
   int yinicio, yfin;
-  cout<<"hilo";
   xinicio = data-> xinicio;
   xfin = data->xfin;
   yinicio = data->yinicio;
   yfin = data->yfin;
-  cout<<xfin;
   for(int i = xinicio; i<xfin;i++){
       int inicioRK = i-mitad;
       int finRK = i+mitad;
@@ -191,8 +189,8 @@ void block(int rows, int cols, int thrds, thread_data thread_data_array[]){
 
 
 int main(int argc, char *argv[]){
-  if ( argc < 3 && argc > 4){
-    cout<<"Se debe ejecutar como ./blur-effect <imageName.ext> NumeroKernel <cantidadHilos>\n Donde NumeroKernel debe ser impar y\ncantidadHilosdebe ser menor a 16, por defecto es 1";
+  if ( argc < 3 || argc > 4){
+    cout<<"Se debe ejecutar como ./blur-effect <imageName.ext> NumeroKernel <cantidadHilos>\n Donde NumeroKernel debe ser impar y\ncantidadHilosdebe ser menor a 16, por defecto es 1\n";
     return -1;
   }
   kernel = atoi(argv[2]);
@@ -203,8 +201,8 @@ int main(int argc, char *argv[]){
   }
   if ( argc == 4){
     int nThread = atoi(argv[3]);
-    if (nThread > 16){
-      cout<<"El número de hilos debe ser menor a 16";
+    if (nThread > 16 || nThread<1){
+      cout<<"El número de hilos debe estar entre 1 y 16";
       return -1;
     }
   }
@@ -218,14 +216,15 @@ int main(int argc, char *argv[]){
     cout<<"No se pudo abrir la imagen "<<imageName<<endl;
     return -1;
   }else{
-    cout << "cols = " << endl << " " << original.cols << endl << endl;
-    cout << "rows = " << endl << " " << original.rows << endl << endl;
+    //cout << "cols = " << endl << " " << original.cols << endl << endl;
+    //cout << "rows = " << endl << " " << original.rows << endl << endl;
     struct thread_data  thread_data_array[nThread];
     pthread_t threads[ nThread ];
     int *threadId[ nThread ];
     // cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
     //cout <<"salida:"<<endl;
     //cout<<copia<<endl<<endl;
+    block(original.cols,original.rows,nThread,thread_data_array);
     for(int t=0,rc=0; t < nThread;t++){
       rc = pthread_create(&threads[t],NULL,blurCalculate,(void *)&thread_data_array[t]);
       if(rc) {
@@ -233,8 +232,8 @@ int main(int argc, char *argv[]){
 	exit(-1);
       }
     }
-    namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
-    imshow(imageName,original);
+    //namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
+    //imshow(imageName,original);
     for(int t=0,rc=0; t < nThread;t++){
       rc = pthread_join(threads[t],NULL);
       if(rc) {
@@ -246,9 +245,9 @@ int main(int argc, char *argv[]){
     strcpy(str,"blur-");
     strcat(str,imageName);
     imwrite(str,copia);
-    namedWindow( "Blur-effect",WINDOW_NORMAL | WINDOW_KEEPRATIO );
-    imshow("Blur-effect",copia);
-    cvWaitKey(0);
+    //namedWindow( "Blur-effect",WINDOW_NORMAL | WINDOW_KEEPRATIO );
+    //imshow("Blur-effect",copia);
+    //cvWaitKey(0);
     return 0;
 
   }

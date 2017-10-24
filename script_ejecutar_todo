@@ -9,7 +9,7 @@ do
     for kernel in {1..15}
     do
 	echo "nombre "$item" kernel:"$kernel >> resultados.txt;
-	tiempo=`time ls`;
+	tiempo=`time ./blur-effect $item $kernel`;
 	echo $tiempo >> resultados.txt;
     done
 done

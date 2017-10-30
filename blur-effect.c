@@ -14,10 +14,9 @@ struct thread_data {
   int thread_id;
   int xinicio, xfin;
   int yinicio, yfin;
-
+  Mat mat;
 };
 // variables Globales
-Mat original, copia;
 int mitad, kernel;
 
 Pixel sumKernel(Mat* m){
@@ -82,18 +81,19 @@ Pixel sumTotalMat(Mat* m){
 }
 
 void* blurCalculate(void *threadData){
-  struct thread_data *data;
-  data = (struct thread_data *) threadData;
-  int xinicio, xfin;
-  int yinicio, yfin;
-  xinicio = data-> xinicio;
-  xfin = data->xfin;
-  yinicio = data->yinicio;
-  yfin = data->yfin;
-  for(int i = xinicio; i<xfin;i++){
+  struct thread_data *data= (struct thread_data *) threadData;
+  int  xfin;
+  int  yfin;
+  Mat original,copia;
+  original = data->mat;
+  copia = original.clone();
+  xfin = original.cols;
+  yfin = original.rows;
+  cout <<xfin<<" "<<yfin<<endl;
+  for(int i = 0; i<yfin;i++){
       int inicioRK = i-mitad;
       int finRK = i+mitad;
-      for(int j = yinicio; j<yfin;j++){
+      for(int j = 0; j<xfin;j++){
 	//cout<<"("<<i<<","<<j<<")"<<" ";
 	/* Si se encuentra dentro de los limites se calcula el kernel de manera normal  */
 	/* excluyendo el centro del kernel y asignandole el promedio de sus bordes */
@@ -125,19 +125,21 @@ void* blurCalculate(void *threadData){
 	  if (finCK >= original.cols)
 	    finCK = original.cols-1;
 	  //Se usa para sustraer una submatriz operator()(RowRange,ColRange)
+	  //cout<<"RANGE : rows "<<inicioRK<<" "<<finRK<<" "<<original.rows<<" cols "<<inicioCK<<" "<<finCK<<" "<<original.cols<<endl;
 	  Mat subImagen = original.operator()(Range(inicioRK,finRK),Range(inicioCK,finCK));
 	  Pixel final = sumTotalMat(&subImagen);
-	  //	cout << " final x " << unsigned(final.x) <<" y " << unsigned(final.y) <<" z " << unsigned(final.z) << endl;
+	  //cout << " final x " << unsigned(final.x) <<" y " << unsigned(final.y) <<" z " << unsigned(final.z) << endl;
 	  Pixel* ptr = copia.ptr<Pixel>(i, j);
 	  subImagen.release();
 	  ptr->x = final.x;
 	  ptr->y = final.y;
 	  ptr->z = final.z;
-	}
+	  }
       }
       //cout<<endl;
-    }
-
+  }
+  data->mat = copia;
+  pthread_exit(  data);
 }
 
 // Crea bloques coordenados para ser asignados a cada uno de los hilos.
@@ -146,14 +148,16 @@ void* blurCalculate(void *threadData){
     thrds: cantidad de hilos a usar
     thread_data_array: coordenadas x,y iniciales y finales para cada hilo
 */
-void block(int rows, int cols, int thrds, thread_data thread_data_array[]){
+void block(Mat* origin,int rows, int cols, int thrds, thread_data thread_data_array[]){
+  cout<<" block:  "<<rows<<" "<<cols<<" "<<thrds<<endl;
   int fact[100];    //Almacenar factores de "thrds".
   int i_fact=0;     //Recorrer el arreglo "fact[]".
   int i=2;          //Verificar los factores desde 2.
   int r = 1;        //Cantidad de filas
   int c = 1;        //Cantidad de columnas
   int rs, cs;       //Separacion de filas y columnas
-
+  Mat* original;
+  original = origin;
   while(i<=thrds){
     if((thrds%i)==0){ //a%b=0, implica que b es factor de a.
       fact[i_fact]=i; //Añadimos factor al arreglo.
@@ -170,7 +174,7 @@ void block(int rows, int cols, int thrds, thread_data thread_data_array[]){
     else
       c*=fact[i];
   }
-
+  cout<<"r "<<r<<" c "<<c<<endl;
   rs=rows/r;
   cs=cols/c;
   thrds=0;
@@ -182,6 +186,7 @@ void block(int rows, int cols, int thrds, thread_data thread_data_array[]){
       thread_data_array[thrds].xfin = (x+1)*cs;
       thread_data_array[thrds].yinicio = y*rs;
       thread_data_array[thrds].yfin = (y+1)*rs;
+      thread_data_array[thrds].mat =  original->operator()(Range(x*cs,(x+1)*cs),Range(y*rs,(y+1)*rs));
       thrds++;
     }
   }
@@ -200,7 +205,7 @@ int main(int argc, char *argv[]){
     return -1;
   }
   if ( argc == 4){
-    int nThread = atoi(argv[3]);
+    nThread = atoi(argv[3]);
     if (nThread > 16 || nThread<1){
       cout<<"El número de hilos debe estar entre 1 y 16";
       return -1;
@@ -208,10 +213,10 @@ int main(int argc, char *argv[]){
   }
   mitad = kernel / 2;
   char* imageName = argv[1];
+  Mat original, copia;
   original = imread(imageName);
-  copia = original.clone();
-  //cout << "original (python)  = " << endl << format(original, Formatter::FMT_PYTHON) << endl << endl;
-  //  cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
+  copia= original.clone();
+  //cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
   if (original.empty()){
     cout<<"No se pudo abrir la imagen "<<imageName<<endl;
     return -1;
@@ -221,26 +226,36 @@ int main(int argc, char *argv[]){
     struct thread_data  thread_data_array[nThread];
     pthread_t threads[ nThread ];
     int *threadId[ nThread ];
-    // cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
-    //cout <<"salida:"<<endl;
-    //cout<<copia<<endl<<endl;
-    block(original.cols,original.rows,nThread,thread_data_array);
+    block(&original,original.cols,original.rows,nThread,thread_data_array);
+    
     for(int t=0,rc=0; t < nThread;t++){
+      //      cout<<"hilo "<<t<<" : "<<thread_data_array[t].xinicio<<" "<<thread_data_array[t].yinicio<<endl;
+      //cout<<thread_data_array[t].xfin<<" "<<thread_data_array[t].yfin<<endl;
       rc = pthread_create(&threads[t],NULL,blurCalculate,(void *)&thread_data_array[t]);
       if(rc) {
-	cout<<"Error al crear el hilo "<<t<<endl;
-	exit(-1);
+      	cout<<"Error al crear el hilo "<<t<<endl;
+      	exit(-1);
       }
     }
+    cout<<"SE LANZARON LOS HILOS"<<endl;
     //namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
     //imshow(imageName,original);
     for(int t=0,rc=0; t < nThread;t++){
-      rc = pthread_join(threads[t],NULL);
+      void* retorno;
+      rc = pthread_join(threads[t],&retorno);
       if(rc) {
-	cout<<"Error al crear el hilo "<<t<<endl;
+	cout<<"Error al recibir el hilo "<<t<<endl;
 	exit(-1);
+      }else{
+	struct thread_data* thread_data_retorno = (struct thread_data*)retorno;
+	cout<<t<<" Datos"<<thread_data_retorno->xinicio<<" Y inicio "<<thread_data_retorno->yinicio<<endl;
+	cout<<"Fin "<<thread_data_retorno->xfin<<" Y fin "<<thread_data_retorno->yfin<<endl;
+	cout << "fragmento  = " << endl << format(thread_data_retorno->mat, Formatter::FMT_PYTHON) << endl << endl;
+	thread_data_retorno->mat.copyTo(copia(cv::Rect(thread_data_retorno->yinicio,thread_data_retorno->xinicio,thread_data_retorno->mat.rows,thread_data_retorno->mat.cols)));
+	rc=0;
       }
     }
+    cout << "total  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
     char str[100];
     strcpy(str,"blur-");
     strcat(str,imageName);

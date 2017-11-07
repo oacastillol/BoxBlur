@@ -3,7 +3,7 @@
 #include <string.h>
 #include <cstdlib>
 #include <iostream>
-#include <pthread.h>
+#include <omp.h>
 
 using namespace std;
 using namespace cv;
@@ -219,28 +219,19 @@ int main(int argc, char *argv[]){
     //cout << "cols = " << endl << " " << original.cols << endl << endl;
     //cout << "rows = " << endl << " " << original.rows << endl << endl;
     struct thread_data  thread_data_array[nThread];
-    pthread_t threads[ nThread ];
-    int *threadId[ nThread ];
+    omp_set_num_threads(nThread);
+    
     // cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
     //cout <<"salida:"<<endl;
     //cout<<copia<<endl<<endl;
     block(original.cols,original.rows,nThread,thread_data_array);
-    for(int t=0,rc=0; t < nThread;t++){
-      rc = pthread_create(&threads[t],NULL,blurCalculate,(void *)&thread_data_array[t]);
-      if(rc) {
-	cout<<"Error al crear el hilo "<<t<<endl;
-	exit(-1);
-      }
+#pragma omp parallel
+    {
+      int tm = omp_get_thread_num();
+      blurCalculate((void *)&thread_data_array[tm]);
     }
     //namedWindow( imageName,WINDOW_NORMAL | WINDOW_KEEPRATIO );
     //imshow(imageName,original);
-    for(int t=0,rc=0; t < nThread;t++){
-      rc = pthread_join(threads[t],NULL);
-      if(rc) {
-	cout<<"Error al crear el hilo "<<t<<endl;
-	exit(-1);
-      }
-    }
     char str[100];
     strcpy(str,"blur-");
     strcat(str,imageName);

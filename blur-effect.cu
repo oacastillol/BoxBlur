@@ -48,7 +48,7 @@ Pixel sumTotalMat(Mat* m){
   return Pixel(totalx,totaly,totalz);
 }
 
-__global__ void blurCalculate(unsigned char *dataIn,unsigned char *dataOut,int rows,int cols,int step,void *threadData){
+__global__ void blurCalculate(unsigned char *dataIn,unsigned char *dataOut,int filas,int columnas,int pasoFila,int tamaElement,void *threadData){
   struct thread_data *data;
   data = (struct thread_data *) threadData;
   int xinicio, xfin;
@@ -57,16 +57,18 @@ __global__ void blurCalculate(unsigned char *dataIn,unsigned char *dataOut,int r
   xfin = data->xfin;
   yinicio = data->yinicio;
   yfin = data->yfin;
-  	for(int j = 0;j < rows;j++){
-   		for(int i = 0;i < cols;i++){
-        	int b = dataIn[step * j + i ] ;
-        	int g = dataIn[step * j + i + 1];
-       		int r = dataIn[step * j + i + 2];
-			dataOut[step * j + i ] = b/2;
-			dataOut[step * j + i + 1 ] = g/2;
-			dataOut[step * j + i + 2 ] = r/2;
-    	}  
-	}
+  int paso;
+  for(int j = 0;j < filas;j++){
+       for(int i = 0;i < columnas;i++){
+	   paso = (pasoFila * j)+(tamaElement * i);
+           int b = dataIn[paso ] ;
+           int g = dataIn[paso + 1];
+           int r = dataIn[paso + 2];
+           dataOut[paso ] = b;
+           dataOut[paso + 1 ] = g;
+           dataOut[paso + 2 ] = r;
+        }
+  }
  /* for(int i = xinicio; i<xfin;i++){
       int inicioRK = i-mitad;
       int finRK = i+mitad;
@@ -194,26 +196,31 @@ int main(int argc, char *argv[]){
     struct thread_data  thread_data_array[nThread];
     cudaDeviceProp deviceProp;
     cudaGetDeviceProperties(&deviceProp,0);
-    unsigned long sizeTotal = original.size().width * original.size().height * sizeof(Pixel);
-    unsigned char *dataIn = original.data;
-    unsigned char *dataOut = copia.data;
+    unsigned long sizeTotal = original.total()*original.elemSize();
+    unsigned char *dataIn = (unsigned char*)(original.data);
+    unsigned char *dataOut;
     unsigned char *dataInDev;
     unsigned char *dataOutDev;
-	dataOut = (unsigned char*) malloc(sizeTotal);
+    int columnas = original.cols;
+    int filas = original.rows;
+    int pasoFila = original.cols * original.elemSize();
+    int tamaElement = original.elemSize();
+    dataOut = (unsigned char*) malloc(sizeTotal);
     cudaMalloc((void**)&dataInDev,sizeTotal);
     cudaMalloc((void**)&dataOutDev,sizeTotal);
     // cout << "copia (python)  = " << endl << format(copia, Formatter::FMT_PYTHON) << endl << endl;
     //cout <<"salida:"<<endl;
     //cout<<copia<<endl<<endl;
-	dim3 blockDims(3);
-	dim3 gridDims(2);
+    dim3 blockDims(3);
+    dim3 gridDims(2);
     block(original.cols,original.rows,nThread,thread_data_array);
     cudaMemcpy(dataInDev,dataIn,sizeTotal,cudaMemcpyHostToDevice);
-	blurCalculate<<<1,12>>>(dataInDev,dataOutDev,(int)original.rows,(int)original.cols,(int)original.step,(void *)&thread_data_array[1]);
-    cudaMemcpy(dataOut,dataOutDev,sizeTotal,cudaMemcpyHostToDevice);
-	copia = Mat(original.rows,original.cols,CV_8UC3,dataOut);
+    blurCalculate<<<1,12>>>(dataInDev,dataOutDev,filas,columnas,pasoFila,tamaElement,(void *)&thread_data_array[1]);
+    cudaMemcpy(dataOut,dataOutDev,sizeTotal,cudaMemcpyDeviceToHost);
+
+    copia = Mat(original.rows,original.cols,CV_8UC3,dataOut);
     cudaFree(dataInDev);
-  	cudaFree(dataOutDev);
+    cudaFree(dataOutDev);
 
 //      int tm = omp_get_thread_num();
 //      blurCalculate<<blocks,thread>>(dataInDev,dataOutDev,(void *)&thread_data_array[tm]);

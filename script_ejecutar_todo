@@ -9,11 +9,11 @@ do
     for kernel in `seq 3 2 15`;
     do
 	echo "nombre "$item" kernel:"$kernel" hilos: 1" >> resultados.txt;
-	(time ./blur-effect $item $kernel ) &>> resultados.txt;
+	(time ./blur-effect $item $kernel ) 2>&1 |grep real >> resultados.txt;
 	for hilos in `seq 2 2 16`;
 	do
-	    echo "nombre "$item" kernel:"$kernel" hilos:"$hilos >> resultados.txt;
-	    (time ./blur-effect $item $kernel $hilos) &>> resultados.txt;
+	    echo "hilos:"$hilos >> resultados.txt;
+	    (time ./blur-effect $item $kernel $hilos ) 2>&1 | grep real >> resultados.txt;
 	     echo "nombre "$item" kernel:"$kernel" hilos:"$hilos;
 	done
     done

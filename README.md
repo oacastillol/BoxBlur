@@ -1,4 +1,4 @@
-# BloxBlur
+# BoxBlur
  Box Blur (desenfoque de cuadro), es la forma mas sencilla de aplicación del efecto borroso, el Box Blur es una aproximación al efecto de desenfoque gaussiano. Para realizar el efecto borroso, se copia la imagen y se divide en filas y columnas, luego se procesa cada punto, tomando en cuenta los datos cercanos, definidos por el  *kernel*, que se ha asignado al momento de ejecutar, entonces se leen estos puntos de la imagen original, se promedian separando cada uno de sus 3 canales (R,G,B), generando así el nuevo punto, el cual se asigna a la posición en la imagen copiada, este proceso se repite para todos los puntos que componen la imagen.
 
  En este repositorio se encuentra la implementación de este algoritmo usando [posix Threads](https://en.wikipedia.org/wiki/Native_POSIX_Thread_Library), [openMP](https://en.wikipedia.org/wiki/OpenMP) y [CUDA](https://en.wikipedia.org/wiki/CUDA). Para el manejo de imagenes se utilizo [OpenCV](https://en.wikipedia.org/wiki/OpenCV). Trabajo realizado para la materia Computación paralela y distribuida.
@@ -16,7 +16,7 @@ Estas implementaciones se realizaron usando [ubuntu-16.04](https://www.ubuntu.co
 
 ## Uso 
 
-Para hacer uso del repositorio dentro de la wiki del repositorio se va a explicar detalladamente cada una.
+Para hacer uso del repositorio dentro de la [wiki](https://github.com/oacastillol/BoxBlur/wiki) del repositorio se va a explicar detalladamente cada una.
 
 ## Contribución
 

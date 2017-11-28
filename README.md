@@ -3,8 +3,6 @@
 
  En este repositorio se encuentra la implementación de este algoritmo usando [posix Threads](https://en.wikipedia.org/wiki/Native_POSIX_Thread_Library), [openMP](https://en.wikipedia.org/wiki/OpenMP) y [CUDA](https://en.wikipedia.org/wiki/CUDA). Para el manejo de imagenes se utilizo [OpenCV](https://en.wikipedia.org/wiki/OpenCV). Trabajo realizado para la materia Computación paralela y distribuida.
 
-## Tabla de contenido
-
 ## Instalación 
 
 Estas implementaciones se realizaron usando [ubuntu-16.04](https://www.ubuntu.com/) se necesito instalar los siguientes paquetes:
@@ -19,6 +17,8 @@ Estas implementaciones se realizaron usando [ubuntu-16.04](https://www.ubuntu.co
 Para hacer uso del repositorio dentro de la [wiki](https://github.com/oacastillol/BoxBlur/wiki) del repositorio se va a explicar detalladamente cada una.
 
 ## Contribución
+
+Si desea contribuir o sugerir mejoras por favor siga la guía [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Creditos
 Este repositorio se realizo gracias a la contribución de :

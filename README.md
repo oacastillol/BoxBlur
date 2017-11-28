@@ -28,4 +28,4 @@ Este repositorio se realizo gracias a la contribución de :
 * [Camilo Andres Pinilla Bocanegra](https://github.com/capinillab)
 
 ## Licenciamiento
-Este repositorio y lo que contiene puede ser editado, compartido y distribuido. Gracias a que se encuentra bajo a la licencia GNU General Public License v3.0 para mayor información puede revisar el archvio [LICENSE.md](LICENSE.md)
+Este repositorio y lo que contiene puede ser editado, compartido y distribuido. Gracias a que se encuentra bajo a la licencia GNU General Public License v3.0 para mayor información puede revisar el archvio [LICENSE](LICENSE)

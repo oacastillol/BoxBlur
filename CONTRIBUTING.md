@@ -8,7 +8,7 @@ A continuación se enumeran los pasos que se deben seguir para ayudar a mejorar 
 
    ![Botón fork](imagenes/FORK.png "Botón Fork")
    
-2. Luego clone su repositorio, lo puede encontrar al ingresar a ```https://github.com/<USERNAME>/BoxBlur``` donde <USERNAME> es su nombre de usuario. Desde su terminal ejecute ```git clone <URL>``` donde <URL> es la que aparece en el botón Clone or download. Esto descargara una copia a su computador del repositorio.
+2. Luego clone su repositorio, lo puede encontrar al ingresar a ```https://github.com/<USERNAME>/BoxBlur``` donde ```<USERNAME>``` es su nombre de usuario. Desde su terminal ejecute ```git clone <URL>``` donde ```<URL>``` es la que aparece en el botón Clone or download. Esto descargara una copia a su computador del repositorio.
 
 
 ![Botón de Clone or download](imagenes/CloneDownload.png "url para clonar el repositorio")
@@ -18,7 +18,7 @@ A continuación se enumeran los pasos que se deben seguir para ayudar a mejorar 
 
 4. Luego debe crear una nueva rama en su repositorio para esto use el siguiente comando ```git checkout -b <nombreRama>``` asocie el nombreRama con el mayor cambio o funcionalidad realizada.
 
-5. Posteriormente agregue los archivos cambiados al seguimiento de git mediante el comando ```git add --all``` para confirmar que se agregaron los archivos correctamente use ```git status``` este le mostrara con detalle la información actual de su repositorio; posteriormente realice un commit ```git commit -m "<Mensaje>"``` busque que el <Mensaje> sea lo más descriptibles posibles.
+5. Posteriormente agregue los archivos cambiados al seguimiento de git mediante el comando ```git add --all``` para confirmar que se agregaron los archivos correctamente use ```git status``` este le mostrara con detalle la información actual de su repositorio; posteriormente realice un commit ```git commit -m "<Mensaje>"``` busque que el ```<Mensaje>``` sea lo más descriptibles posibles.
 
 6. Luego debe subir estos cambios a internet para esto usaremos el comando ```git push --set-upstream origin <nombreRama>``` esto agregara la nueva rama y sus cambios al repositorio que puede ver en [github](https://github.com)
 
@@ -27,8 +27,8 @@ A continuación se enumeran los pasos que se deben seguir para ayudar a mejorar 
 ## El algoritmo
 
 Nos basamos en las siguientes fuentes:
-<http://amritamaz.net/blog/understanding-box-blur>
-<https://web.archive.org/web/20060718054020/http://www.acm.uiuc.edu/siggraph/workshops/wjarosz_convolution_2001.pdf>
-<https://www.w3.org/TR/SVG11/filters.html#feGaussianBlurElement>
+* <http://amritamaz.net/blog/understanding-box-blur>
+* <https://web.archive.org/web/20060718054020/http://www.acm.uiuc.edu/siggraph/workshops/wjarosz_convolution_2001.pdf>
+* <https://www.w3.org/TR/SVG11/filters.html#feGaussianBlurElement>
 
 Gracias por tu interés en contribuir al proyecto

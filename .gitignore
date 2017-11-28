@@ -30,6 +30,7 @@
 *.exe
 *.out
 *.app
+blur-effect
 # Created by https://www.gitignore.io/api/emacs
 
 ### Emacs ###

@@ -1,0 +1,841 @@
+Resultados de la ejecucion
+nombre 720p.png kernel:3 hilos:2
+
+real	0m0,782s
+user	0m0,721s
+sys	0m0,027s
+nombre 720p.png kernel:3 hilos:4
+
+real	0m0,759s
+user	0m0,728s
+sys	0m0,027s
+nombre 720p.png kernel:3 hilos:6
+
+real	0m0,767s
+user	0m0,740s
+sys	0m0,023s
+nombre 720p.png kernel:3 hilos:8
+
+real	0m0,754s
+user	0m0,709s
+sys	0m0,043s
+nombre 720p.png kernel:3 hilos:10
+
+real	0m0,744s
+user	0m0,707s
+sys	0m0,037s
+nombre 720p.png kernel:3 hilos:12
+
+real	0m0,753s
+user	0m0,719s
+sys	0m0,033s
+nombre 720p.png kernel:3 hilos:14
+
+real	0m0,745s
+user	0m0,705s
+sys	0m0,033s
+nombre 720p.png kernel:3 hilos:16
+
+real	0m0,766s
+user	0m0,731s
+sys	0m0,034s
+nombre 720p.png kernel:5 hilos:2
+
+real	0m1,075s
+user	0m1,027s
+sys	0m0,047s
+nombre 720p.png kernel:5 hilos:4
+
+real	0m1,082s
+user	0m1,033s
+sys	0m0,043s
+nombre 720p.png kernel:5 hilos:6
+
+real	0m1,064s
+user	0m1,028s
+sys	0m0,033s
+nombre 720p.png kernel:5 hilos:8
+
+real	0m1,069s
+user	0m1,006s
+sys	0m0,053s
+nombre 720p.png kernel:5 hilos:10
+
+real	0m1,075s
+user	0m1,026s
+sys	0m0,043s
+nombre 720p.png kernel:5 hilos:12
+
+real	0m1,087s
+user	0m1,028s
+sys	0m0,050s
+nombre 720p.png kernel:5 hilos:14
+
+real	0m1,096s
+user	0m1,047s
+sys	0m0,047s
+nombre 720p.png kernel:5 hilos:16
+
+real	0m1,143s
+user	0m1,067s
+sys	0m0,030s
+nombre 720p.png kernel:7 hilos:2
+
+real	0m1,521s
+user	0m1,472s
+sys	0m0,043s
+nombre 720p.png kernel:7 hilos:4
+
+real	0m1,512s
+user	0m1,473s
+sys	0m0,037s
+nombre 720p.png kernel:7 hilos:6
+
+real	0m1,514s
+user	0m1,463s
+sys	0m0,050s
+nombre 720p.png kernel:7 hilos:8
+
+real	0m1,520s
+user	0m1,482s
+sys	0m0,037s
+nombre 720p.png kernel:7 hilos:10
+
+real	0m1,499s
+user	0m1,461s
+sys	0m0,037s
+nombre 720p.png kernel:7 hilos:12
+
+real	0m1,511s
+user	0m1,484s
+sys	0m0,027s
+nombre 720p.png kernel:7 hilos:14
+
+real	0m1,524s
+user	0m1,482s
+sys	0m0,040s
+nombre 720p.png kernel:7 hilos:16
+
+real	0m1,531s
+user	0m1,493s
+sys	0m0,037s
+nombre 720p.png kernel:9 hilos:2
+
+real	0m2,095s
+user	0m2,063s
+sys	0m0,030s
+nombre 720p.png kernel:9 hilos:4
+
+real	0m2,075s
+user	0m2,047s
+sys	0m0,023s
+nombre 720p.png kernel:9 hilos:6
+
+real	0m2,086s
+user	0m2,051s
+sys	0m0,034s
+nombre 720p.png kernel:9 hilos:8
+
+real	0m2,098s
+user	0m2,065s
+sys	0m0,024s
+nombre 720p.png kernel:9 hilos:10
+
+real	0m2,087s
+user	0m2,047s
+sys	0m0,033s
+nombre 720p.png kernel:9 hilos:12
+
+real	0m2,071s
+user	0m2,033s
+sys	0m0,037s
+nombre 720p.png kernel:9 hilos:14
+
+real	0m2,066s
+user	0m2,013s
+sys	0m0,040s
+nombre 720p.png kernel:9 hilos:16
+
+real	0m2,075s
+user	0m2,023s
+sys	0m0,050s
+nombre 720p.png kernel:11 hilos:2
+
+real	0m2,794s
+user	0m2,756s
+sys	0m0,033s
+nombre 720p.png kernel:11 hilos:4
+
+real	0m2,790s
+user	0m2,747s
+sys	0m0,040s
+nombre 720p.png kernel:11 hilos:6
+
+real	0m2,782s
+user	0m2,723s
+sys	0m0,037s
+nombre 720p.png kernel:11 hilos:8
+
+real	0m2,780s
+user	0m2,737s
+sys	0m0,040s
+nombre 720p.png kernel:11 hilos:10
+
+real	0m2,792s
+user	0m2,737s
+sys	0m0,040s
+nombre 720p.png kernel:11 hilos:12
+
+real	0m2,781s
+user	0m2,748s
+sys	0m0,030s
+nombre 720p.png kernel:11 hilos:14
+
+real	0m2,792s
+user	0m2,753s
+sys	0m0,037s
+nombre 720p.png kernel:11 hilos:16
+
+real	0m2,775s
+user	0m2,750s
+sys	0m0,024s
+nombre 720p.png kernel:13 hilos:2
+
+real	0m3,615s
+user	0m3,572s
+sys	0m0,037s
+nombre 720p.png kernel:13 hilos:4
+
+real	0m3,642s
+user	0m3,573s
+sys	0m0,063s
+nombre 720p.png kernel:13 hilos:6
+
+real	0m3,658s
+user	0m3,591s
+sys	0m0,043s
+nombre 720p.png kernel:13 hilos:8
+
+real	0m3,655s
+user	0m3,612s
+sys	0m0,040s
+nombre 720p.png kernel:13 hilos:10
+
+real	0m3,643s
+user	0m3,602s
+sys	0m0,033s
+nombre 720p.png kernel:13 hilos:12
+
+real	0m3,628s
+user	0m3,568s
+sys	0m0,057s
+nombre 720p.png kernel:13 hilos:14
+
+real	0m3,633s
+user	0m3,599s
+sys	0m0,030s
+nombre 720p.png kernel:13 hilos:16
+
+real	0m3,663s
+user	0m3,622s
+sys	0m0,037s
+nombre 720p.png kernel:15 hilos:2
+
+real	0m4,629s
+user	0m4,585s
+sys	0m0,024s
+nombre 720p.png kernel:15 hilos:4
+
+real	0m4,619s
+user	0m4,581s
+sys	0m0,037s
+nombre 720p.png kernel:15 hilos:6
+
+real	0m4,596s
+user	0m4,551s
+sys	0m0,040s
+nombre 720p.png kernel:15 hilos:8
+
+real	0m4,605s
+user	0m4,558s
+sys	0m0,037s
+nombre 720p.png kernel:15 hilos:10
+
+real	0m4,620s
+user	0m4,562s
+sys	0m0,053s
+nombre 720p.png kernel:15 hilos:12
+
+real	0m4,615s
+user	0m4,565s
+sys	0m0,037s
+nombre 720p.png kernel:15 hilos:14
+
+real	0m4,614s
+user	0m4,580s
+sys	0m0,030s
+nombre 720p.png kernel:15 hilos:16
+
+real	0m4,610s
+user	0m4,556s
+sys	0m0,047s
+nombre 4K.jpg kernel:3 hilos:2
+
+real	0m4,139s
+user	0m4,018s
+sys	0m0,074s
+nombre 4K.jpg kernel:3 hilos:4
+
+real	0m4,070s
+user	0m4,000s
+sys	0m0,063s
+nombre 4K.jpg kernel:3 hilos:6
+
+real	0m4,104s
+user	0m4,037s
+sys	0m0,063s
+nombre 4K.jpg kernel:3 hilos:8
+
+real	0m4,091s
+user	0m4,011s
+sys	0m0,074s
+nombre 4K.jpg kernel:3 hilos:10
+
+real	0m4,119s
+user	0m4,032s
+sys	0m0,083s
+nombre 4K.jpg kernel:3 hilos:12
+
+real	0m4,834s
+user	0m4,100s
+sys	0m0,074s
+nombre 4K.jpg kernel:3 hilos:14
+
+real	0m7,174s
+user	0m4,055s
+sys	0m0,097s
+nombre 4K.jpg kernel:3 hilos:16
+
+real	0m4,113s
+user	0m4,052s
+sys	0m0,057s
+nombre 4K.jpg kernel:5 hilos:2
+
+real	0m7,082s
+user	0m7,015s
+sys	0m0,054s
+nombre 4K.jpg kernel:5 hilos:4
+
+real	0m7,002s
+user	0m6,917s
+sys	0m0,080s
+nombre 4K.jpg kernel:5 hilos:6
+
+real	0m7,006s
+user	0m6,897s
+sys	0m0,103s
+nombre 4K.jpg kernel:5 hilos:8
+
+real	0m6,992s
+user	0m6,898s
+sys	0m0,087s
+nombre 4K.jpg kernel:5 hilos:10
+
+real	0m6,994s
+user	0m6,905s
+sys	0m0,083s
+nombre 4K.jpg kernel:5 hilos:12
+
+real	0m7,016s
+user	0m6,952s
+sys	0m0,050s
+nombre 4K.jpg kernel:5 hilos:14
+
+real	0m7,016s
+user	0m6,935s
+sys	0m0,067s
+nombre 4K.jpg kernel:5 hilos:16
+
+real	0m7,012s
+user	0m6,937s
+sys	0m0,070s
+nombre 4K.jpg kernel:7 hilos:2
+
+real	0m10,983s
+user	0m10,890s
+sys	0m0,084s
+nombre 4K.jpg kernel:7 hilos:4
+
+real	0m10,968s
+user	0m10,885s
+sys	0m0,074s
+nombre 4K.jpg kernel:7 hilos:6
+
+real	0m11,005s
+user	0m10,941s
+sys	0m0,053s
+nombre 4K.jpg kernel:7 hilos:8
+
+real	0m10,959s
+user	0m10,888s
+sys	0m0,057s
+nombre 4K.jpg kernel:7 hilos:10
+
+real	0m10,977s
+user	0m10,888s
+sys	0m0,073s
+nombre 4K.jpg kernel:7 hilos:12
+
+real	0m11,022s
+user	0m10,929s
+sys	0m0,060s
+nombre 4K.jpg kernel:7 hilos:14
+
+real	0m10,981s
+user	0m10,890s
+sys	0m0,080s
+nombre 4K.jpg kernel:7 hilos:16
+
+real	0m10,981s
+user	0m10,906s
+sys	0m0,063s
+nombre 4K.jpg kernel:9 hilos:2
+
+real	0m16,172s
+user	0m16,100s
+sys	0m0,051s
+nombre 4K.jpg kernel:9 hilos:4
+
+real	0m16,241s
+user	0m16,047s
+sys	0m0,097s
+nombre 4K.jpg kernel:9 hilos:6
+
+real	0m16,140s
+user	0m16,060s
+sys	0m0,070s
+nombre 4K.jpg kernel:9 hilos:8
+
+real	0m16,069s
+user	0m16,000s
+sys	0m0,060s
+nombre 4K.jpg kernel:9 hilos:10
+
+real	0m16,074s
+user	0m15,988s
+sys	0m0,067s
+nombre 4K.jpg kernel:9 hilos:12
+
+real	0m16,075s
+user	0m16,011s
+sys	0m0,037s
+nombre 4K.jpg kernel:9 hilos:14
+
+real	0m16,105s
+user	0m16,038s
+sys	0m0,053s
+nombre 4K.jpg kernel:9 hilos:16
+
+real	0m16,087s
+user	0m15,999s
+sys	0m0,073s
+nombre 4K.jpg kernel:11 hilos:2
+
+real	0m22,483s
+user	0m22,407s
+sys	0m0,064s
+nombre 4K.jpg kernel:11 hilos:4
+
+real	0m23,732s
+user	0m22,500s
+sys	0m0,093s
+nombre 4K.jpg kernel:11 hilos:6
+
+real	0m22,813s
+user	0m22,499s
+sys	0m0,073s
+nombre 4K.jpg kernel:11 hilos:8
+
+real	0m22,472s
+user	0m22,378s
+sys	0m0,077s
+nombre 4K.jpg kernel:11 hilos:10
+
+real	0m22,529s
+user	0m22,391s
+sys	0m0,070s
+nombre 4K.jpg kernel:11 hilos:12
+
+real	0m22,901s
+user	0m22,536s
+sys	0m0,110s
+nombre 4K.jpg kernel:11 hilos:14
+
+real	0m22,586s
+user	0m22,453s
+sys	0m0,070s
+nombre 4K.jpg kernel:11 hilos:16
+
+real	0m22,546s
+user	0m22,433s
+sys	0m0,083s
+nombre 4K.jpg kernel:13 hilos:2
+
+real	0m30,254s
+user	0m30,141s
+sys	0m0,077s
+nombre 4K.jpg kernel:13 hilos:4
+
+real	0m30,702s
+user	0m30,291s
+sys	0m0,073s
+nombre 4K.jpg kernel:13 hilos:6
+
+real	0m30,213s
+user	0m30,145s
+sys	0m0,047s
+nombre 4K.jpg kernel:13 hilos:8
+
+real	0m30,290s
+user	0m30,229s
+sys	0m0,047s
+nombre 4K.jpg kernel:13 hilos:10
+
+real	0m30,319s
+user	0m30,240s
+sys	0m0,060s
+nombre 4K.jpg kernel:13 hilos:12
+
+real	0m30,240s
+user	0m30,151s
+sys	0m0,067s
+nombre 4K.jpg kernel:13 hilos:14
+
+real	0m30,214s
+user	0m30,127s
+sys	0m0,064s
+nombre 4K.jpg kernel:13 hilos:16
+
+real	0m30,354s
+user	0m30,241s
+sys	0m0,083s
+nombre 4K.jpg kernel:15 hilos:2
+
+real	0m39,051s
+user	0m38,963s
+sys	0m0,067s
+nombre 4K.jpg kernel:15 hilos:4
+
+real	0m39,343s
+user	0m39,263s
+sys	0m0,057s
+nombre 4K.jpg kernel:15 hilos:6
+
+real	0m39,012s
+user	0m38,955s
+sys	0m0,047s
+nombre 4K.jpg kernel:15 hilos:8
+
+real	0m39,322s
+user	0m39,040s
+sys	0m0,064s
+nombre 4K.jpg kernel:15 hilos:10
+
+real	0m39,163s
+user	0m38,983s
+sys	0m0,067s
+nombre 4K.jpg kernel:15 hilos:12
+
+real	0m39,122s
+user	0m38,984s
+sys	0m0,097s
+nombre 4K.jpg kernel:15 hilos:14
+
+real	0m39,050s
+user	0m38,944s
+sys	0m0,080s
+nombre 4K.jpg kernel:15 hilos:16
+
+real	0m39,067s
+user	0m38,951s
+sys	0m0,070s
+nombre 1080p.png kernel:3 hilos:2
+
+real	0m1,458s
+user	0m1,426s
+sys	0m0,030s
+nombre 1080p.png kernel:3 hilos:4
+
+real	0m1,473s
+user	0m1,422s
+sys	0m0,050s
+nombre 1080p.png kernel:3 hilos:6
+
+real	0m1,460s
+user	0m1,415s
+sys	0m0,043s
+nombre 1080p.png kernel:3 hilos:8
+
+real	0m1,460s
+user	0m1,416s
+sys	0m0,043s
+nombre 1080p.png kernel:3 hilos:10
+
+real	0m1,450s
+user	0m1,422s
+sys	0m0,027s
+nombre 1080p.png kernel:3 hilos:12
+
+real	0m1,478s
+user	0m1,436s
+sys	0m0,040s
+nombre 1080p.png kernel:3 hilos:14
+
+real	0m1,470s
+user	0m1,408s
+sys	0m0,060s
+nombre 1080p.png kernel:3 hilos:16
+
+real	0m1,448s
+user	0m1,394s
+sys	0m0,053s
+nombre 1080p.png kernel:5 hilos:2
+
+real	0m2,209s
+user	0m2,164s
+sys	0m0,043s
+nombre 1080p.png kernel:5 hilos:4
+
+real	0m2,170s
+user	0m2,125s
+sys	0m0,043s
+nombre 1080p.png kernel:5 hilos:6
+
+real	0m2,189s
+user	0m2,150s
+sys	0m0,037s
+nombre 1080p.png kernel:5 hilos:8
+
+real	0m2,313s
+user	0m2,149s
+sys	0m0,033s
+nombre 1080p.png kernel:5 hilos:10
+
+real	0m2,189s
+user	0m2,151s
+sys	0m0,030s
+nombre 1080p.png kernel:5 hilos:12
+
+real	0m2,171s
+user	0m2,126s
+sys	0m0,043s
+nombre 1080p.png kernel:5 hilos:14
+
+real	0m2,200s
+user	0m2,155s
+sys	0m0,043s
+nombre 1080p.png kernel:5 hilos:16
+
+real	0m2,174s
+user	0m2,125s
+sys	0m0,047s
+nombre 1080p.png kernel:7 hilos:2
+
+real	0m3,183s
+user	0m3,122s
+sys	0m0,053s
+nombre 1080p.png kernel:7 hilos:4
+
+real	0m3,188s
+user	0m3,139s
+sys	0m0,043s
+nombre 1080p.png kernel:7 hilos:6
+
+real	0m3,170s
+user	0m3,108s
+sys	0m0,057s
+nombre 1080p.png kernel:7 hilos:8
+
+real	0m3,158s
+user	0m3,112s
+sys	0m0,037s
+nombre 1080p.png kernel:7 hilos:10
+
+real	0m3,165s
+user	0m3,124s
+sys	0m0,040s
+nombre 1080p.png kernel:7 hilos:12
+
+real	0m3,164s
+user	0m3,125s
+sys	0m0,037s
+nombre 1080p.png kernel:7 hilos:14
+
+real	0m3,190s
+user	0m3,132s
+sys	0m0,057s
+nombre 1080p.png kernel:7 hilos:16
+
+real	0m3,165s
+user	0m3,115s
+sys	0m0,047s
+nombre 1080p.png kernel:9 hilos:2
+
+real	0m4,471s
+user	0m4,408s
+sys	0m0,050s
+nombre 1080p.png kernel:9 hilos:4
+
+real	0m4,435s
+user	0m4,390s
+sys	0m0,043s
+nombre 1080p.png kernel:9 hilos:6
+
+real	0m4,448s
+user	0m4,415s
+sys	0m0,030s
+nombre 1080p.png kernel:9 hilos:8
+
+real	0m4,449s
+user	0m4,372s
+sys	0m0,070s
+nombre 1080p.png kernel:9 hilos:10
+
+real	0m4,486s
+user	0m4,435s
+sys	0m0,043s
+nombre 1080p.png kernel:9 hilos:12
+
+real	0m4,428s
+user	0m4,379s
+sys	0m0,040s
+nombre 1080p.png kernel:9 hilos:14
+
+real	0m4,457s
+user	0m4,396s
+sys	0m0,053s
+nombre 1080p.png kernel:9 hilos:16
+
+real	0m4,452s
+user	0m4,411s
+sys	0m0,040s
+nombre 1080p.png kernel:11 hilos:2
+
+real	0m6,030s
+user	0m6,003s
+sys	0m0,027s
+nombre 1080p.png kernel:11 hilos:4
+
+real	0m6,027s
+user	0m5,970s
+sys	0m0,053s
+nombre 1080p.png kernel:11 hilos:6
+
+real	0m6,052s
+user	0m5,996s
+sys	0m0,053s
+nombre 1080p.png kernel:11 hilos:8
+
+real	0m6,039s
+user	0m5,971s
+sys	0m0,057s
+nombre 1080p.png kernel:11 hilos:10
+
+real	0m6,047s
+user	0m5,998s
+sys	0m0,043s
+nombre 1080p.png kernel:11 hilos:12
+
+real	0m6,036s
+user	0m6,003s
+sys	0m0,030s
+nombre 1080p.png kernel:11 hilos:14
+
+real	0m6,046s
+user	0m5,989s
+sys	0m0,053s
+nombre 1080p.png kernel:11 hilos:16
+
+real	0m6,051s
+user	0m5,996s
+sys	0m0,054s
+nombre 1080p.png kernel:13 hilos:2
+
+real	0m7,977s
+user	0m7,916s
+sys	0m0,057s
+nombre 1080p.png kernel:13 hilos:4
+
+real	0m7,993s
+user	0m7,928s
+sys	0m0,051s
+nombre 1080p.png kernel:13 hilos:6
+
+real	0m7,972s
+user	0m7,919s
+sys	0m0,037s
+nombre 1080p.png kernel:13 hilos:8
+
+real	0m7,976s
+user	0m7,941s
+sys	0m0,033s
+nombre 1080p.png kernel:13 hilos:10
+
+real	0m7,942s
+user	0m7,898s
+sys	0m0,030s
+nombre 1080p.png kernel:13 hilos:12
+
+real	0m7,965s
+user	0m7,918s
+sys	0m0,043s
+nombre 1080p.png kernel:13 hilos:14
+
+real	0m7,969s
+user	0m7,908s
+sys	0m0,053s
+nombre 1080p.png kernel:13 hilos:16
+
+real	0m7,984s
+user	0m7,931s
+sys	0m0,047s
+nombre 1080p.png kernel:15 hilos:2
+
+real	0m10,152s
+user	0m10,113s
+sys	0m0,030s
+nombre 1080p.png kernel:15 hilos:4
+
+real	0m10,145s
+user	0m10,104s
+sys	0m0,030s
+nombre 1080p.png kernel:15 hilos:6
+
+real	0m10,159s
+user	0m10,111s
+sys	0m0,044s
+nombre 1080p.png kernel:15 hilos:8
+
+real	0m10,137s
+user	0m10,078s
+sys	0m0,057s
+nombre 1080p.png kernel:15 hilos:10
+
+real	0m10,134s
+user	0m10,083s
+sys	0m0,047s
+nombre 1080p.png kernel:15 hilos:12
+
+real	0m10,171s
+user	0m10,133s
+sys	0m0,034s
+nombre 1080p.png kernel:15 hilos:14
+
+real	0m10,150s
+user	0m10,111s
+sys	0m0,037s
+nombre 1080p.png kernel:15 hilos:16
+
+real	0m10,187s
+user	0m10,131s
+sys	0m0,047s
